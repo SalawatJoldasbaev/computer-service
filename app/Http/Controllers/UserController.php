@@ -12,8 +12,8 @@ class UserController extends Controller
     public function create(Request $request){
         $validation = Validator::make($request->all(), [
             'full_name'=>'required',
-            'phone'=>'required|unique:Users,phone',
-            'inn'=>'required_if:status,Y,P|unique:Users,inn|nullable',
+            'phone'=>'required|unique:users,phone',
+            'inn'=>'required_if:status,Y,P|unique:users,inn|nullable',
             'status'=>'required',
             'description'=>'nullable'
         ]);
