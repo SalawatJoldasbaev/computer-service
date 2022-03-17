@@ -54,7 +54,7 @@ class ProductController extends Controller
             }
             if($category->parent_id == 0){
                 $final_response = [];
-                $this->parent_ids($category->parents, $final_response);
+                $this->parent_ids($category->parents, $final_response, $category->id);
                 $products = $products->whereIn('category_id', $final_response);
             }else{
                 $products = $products->where('category_id', $category->id);
@@ -113,7 +113,10 @@ class ProductController extends Controller
         return BaseController::response($product->toArray());
     }
 
-    private function parent_ids($parents, &$final_response){
+    private function parent_ids($parents, &$final_response, $id = null){
+        if(!is_null($id)){
+            $final_response[] = $id;
+        }
         foreach ($parents as $parent) {
             $final_response[] = $parent->id;
             if(!empty($parent->parents)){
