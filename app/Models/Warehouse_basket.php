@@ -11,7 +11,7 @@ class Warehouse_basket extends Model
    protected $guarded = ['id'];
 
     public function Postman(){
-        return $this->belongsTo(Postman::class);
+        return $this->belongsTo(Postman::class)->withTrashed();
     }
     public function Admin(){
         return $this->belongsTo(Admin::class);

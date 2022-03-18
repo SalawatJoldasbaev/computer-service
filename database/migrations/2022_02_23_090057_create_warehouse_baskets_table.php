@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('warehouse_baskets', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(App\Models\Admin::class);
-            $table->foreignIdFor(App\Models\Postman::class);
+            $table->foreignIdFor(App\Models\Postman::class)->constrained('postmen');
             $table->double('usd_price');
             $table->double('uzs_price');
             $table->string('description')->nullable();
