@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->string('inn')->unique();
             $table->string('description')->nullable();
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

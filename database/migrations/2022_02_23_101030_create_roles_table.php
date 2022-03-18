@@ -19,31 +19,16 @@ return new class extends Migration
             $table->string('name');
             $table->timestamps();
         });
-
-        Role::create([
-            'name'=> 'Директор',
-        ]);
-        Role::create([
-            'name'=> 'Бухгалтер',
-        ]);
-        Role::create([
-            'name'=> 'Кассир',
-        ]);
-        Role::create([
-            'name'=> 'Заведующий складом',
-        ]);
-        Role::create([
-            'name'=> 'Контроль качество',
-        ]);
-        Role::create([
-            'name'=> 'Торговый агент',
-        ]);
-        Role::create([
-            'name'=> 'Продавец',
-        ]);
-        Role::create([
-            'name'=> 'Пользователь',
-        ]);
+        Role::upsert([
+            ['name'=> 'Директор'],
+            ['name'=> 'Бухгалтер'],
+            ['name'=> 'Кассир'],
+            ['name'=> 'Заведующий складом'],
+            ['name'=> 'Контроль качество'],
+            ['name'=> 'Торговый агент'],
+            ['name'=> 'Продавец'],
+            ['name'=> 'Пользователь'],
+        ], ['name']);
     }
 
     /**

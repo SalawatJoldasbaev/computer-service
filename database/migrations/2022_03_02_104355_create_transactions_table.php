@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(App\Models\Warehouse_basket::class);
             $table->foreignIdFor(App\Models\Admin::class);
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

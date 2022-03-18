@@ -21,8 +21,8 @@ return new class extends Migration
             $table->enum('status', ['Y', 'J']);
             $table->string('description')->nullable();
             $table->double('balance')->default(0);
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

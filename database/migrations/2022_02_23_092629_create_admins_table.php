@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('user_name')->unique();
             $table->string('name');
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Admin::create([

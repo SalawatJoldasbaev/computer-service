@@ -20,8 +20,8 @@ return new class extends Migration
             $table->integer('min_percent');
             $table->integer('max_percent');
             $table->integer('whole_percent');
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

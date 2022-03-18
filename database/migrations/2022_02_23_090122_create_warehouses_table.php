@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('warehouses', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(App\Models\Postman::class);
             $table->foreignIdFor(App\Models\Product::class);
             $table->integer('count');
+            $table->json('codes');
             $table->date('date');
             $table->timestamps();
         });

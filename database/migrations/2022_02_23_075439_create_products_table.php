@@ -23,8 +23,8 @@ return new class extends Migration
             $table->double('whole_price');
             $table->double('min_price');
             $table->enum('unit', ['USD', 'UZS']);
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

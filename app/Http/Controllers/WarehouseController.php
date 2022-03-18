@@ -11,4 +11,8 @@ class WarehouseController extends Controller
         $products = Warehouse::all();
         return BaseController::response($products->toArray());
     }
+
+    public function warhouse(){
+        $warehouse = Warehouse::find(1);
+    }
 }

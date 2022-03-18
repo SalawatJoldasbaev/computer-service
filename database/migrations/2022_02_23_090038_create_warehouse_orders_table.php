@@ -6,12 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up():void
     {
         Schema::create('warehouse_orders', function (Blueprint $table) {
             $table->id();
@@ -19,21 +14,17 @@ return new class extends Migration
             $table->foreignIdFor(App\Models\Product::class);
             $table->foreignIdFor(App\Models\Postman::class);
             $table->integer('count');
+            $table->json('codes');
             $table->integer('get_count')->default(0);
             $table->enum('unit', ['UZS', 'USD']);
             $table->double('price');
             $table->string('description')->nullable();
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down():void
     {
         Schema::dropIfExists('warehouse_orders');
     }
