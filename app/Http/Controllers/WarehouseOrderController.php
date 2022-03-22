@@ -40,8 +40,10 @@ class WarehouseOrderController extends Controller
             'description'=>$request->description
         ]);
 
+        $warehouse_orers = [];
+
         foreach($orders as $order){
-            Warehouse_order::create([
+            $warehouse_orers[] = [
                 'warehouse_basket_id'=>$basket->id,
                 'product_id'=>$order['product_id'],
                 'postman_id'=>$request->postman_id,
@@ -49,8 +51,13 @@ class WarehouseOrderController extends Controller
                 'unit'=>$order['unit'],
                 'price'=>$order['price'],
                 'description'=>$order['description']
-            ]);
+            ];
         }
+        Warehouse_order::upsert($warehouse_orers,[
+            'warehouse_basket_id', 'product_id', 'postman_id',
+            'count', 'unit', 'price', 'description'
+        ]);
+
         return BaseController::response($basket->toArray());
     }
 
@@ -71,67 +78,35 @@ class WarehouseOrderController extends Controller
         return BaseController::success();
     }
 
-    public function deliver(Request $request){
-        $admin = $request->user();
-        $orders = $request->orders;
-        foreach($orders as $order){
-            $old_count = Warehouse::where('product_id', $order['product_id'])
-            ->orderBy('id', 'desc')
-            ->first();
-
-            if($old_count == null){
-                Warehouse::Create([
-                    'product_id' => $order['product_id'],
-                    'count' => $order['product_count'],
-                    'date'=> date('Y-m-d')
-                ]);
-            }else{
-                if($old_count->date == date('Y-m-d')){
-                    $old_count->update([
-                        'product_id'=> $order['product_id'],
-                        'count'=> $old_count->count+$order['product_count'],
-                        'date'=> date('Y-m-d')
-                    ]);
-                }else{
-                    Warehouse::Create([
-                        'product_id' => $order['product_id'],
-                        'count' => $old_count->count+$order['product_count'],
-                        'date'=> date('Y-m-d')
-                    ]);
-                }
-            }
-            Warehouse_order::where('id', $order['order_id'])
-            ->update([
-                'get_count'=>$order['product_count']
-            ]);
-        }
-
-        Transaction::create([
-            'warehouse_basket_id' => $request->basket_id,
-            'admin_id' => $admin->role_id,
-            'description' => $request->description
-        ]);
-        Warehouse_basket::find($request->basket_id)
-        ->update([
-            'is_deliver'=>true
-        ]);
-
-        return BaseController::success();
-    }
-
-    public function basket_orders(Request $request, $basket_id){
+    public function basket_orders(Request $request){
         $search = $request->search;
+        $basket_id = $request->basket_id;
 
-        $orders = Warehouse_order::select('warehouse_orders.id as order_id', 'products.id as product_id', 'products.name as product_name', 'warehouse_orders.count as product_count', 'warehouse_orders.unit as order_unit', 'warehouse_orders.price as order_price', 'warehouse_orders.description as order_description')
-            ->where('warehouse_basket_id', $basket_id)
-            ->join('products', 'products.id', 'warehouse_orders.product_id');
-
-        if($search){
-            $orders = $orders->where('products.name', 'like', "%{$search}%");
+        $basket = Warehouse_basket::find($basket_id);
+        $orders = $basket->orders;
+        $final_response = [
+            'basket_id'=> $basket->id,
+            'description'=> $basket->description,
+            'orders'=> [],
+        ];
+        foreach ($orders as $order) {
+            $final_response['orders'][] = [
+                'order_id'=> $order->id,
+                'product_id'=> $order->product->id,
+                'product_name'=> $order->product->name,
+                'description'=> $order->description,
+                'count'=> $order->count,
+                'codes'=> []
+            ];
         }
-        $orders = $orders->get();
-
-        return BaseController::response($orders);
+        if($search){
+            $collect = collect($final_response['orders']);
+            $searched = $collect->filter(function($item) use ($search){
+                return stripos($item['product_name'], $search) !== false;
+            });
+            $final_response['orders'] = $searched->values();
+        }
+        return BaseController::response($final_response);
     }
 
 }

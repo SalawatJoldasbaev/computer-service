@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Category;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,6 +24,28 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Category::create([
+            'parent_id'=> 0,
+            'name'=> 'Computer',
+            'min_percent'=> 1,
+            'max_percent'=> 1,
+            'whole_percent'=> 1,
+        ]);
+        Category::create([
+            'parent_id'=> 1,
+            'name'=> 'PC',
+            'min_percent'=> 1,
+            'max_percent'=> 1,
+            'whole_percent'=> 1,
+        ]);
+        Category::create([
+            'parent_id'=> 2,
+            'name'=> 'Gaming',
+            'min_percent'=> 1,
+            'max_percent'=> 1,
+            'whole_percent'=> 1,
+        ]);
     }
 
     /**

@@ -37,4 +37,33 @@ class CategoryController extends Controller
         return BaseController::response($categories);
     }
 
+    public function update(Request $request){
+        $category_id = $request->category_id;
+        $category = Category::find($category_id);
+        if($category){
+            $category->update($request->all());
+            return BaseController::success();
+        }else{
+            return BaseController::error('category not found', 404);
+        }
+    }
+
+    public function show($id){
+        $category = Category::find($id);
+        if(!$category){
+            return BaseController::error('category not found', 404);
+        }
+        $data = [
+            'parent_id'=> $category->parent_id,
+            'name'=> $category->name,
+            'min_percent'=> $category->min_percent,
+            'max_percent'=> $category->max_percent,
+            'whole_percent'=> $category->whole_percent,
+        ];
+        return BaseController::response($data);
+    }
+    public function delete($id){
+        $category = Category::find($id)->delete();
+        // return
+    }
 }

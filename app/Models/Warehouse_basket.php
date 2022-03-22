@@ -16,4 +16,8 @@ class Warehouse_basket extends Model
     public function Admin(){
         return $this->belongsTo(Admin::class);
     }
+
+    public function orders(){
+        return $this->hasMany(Warehouse_order::class);
+    }
 }

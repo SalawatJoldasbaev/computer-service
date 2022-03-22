@@ -37,6 +37,9 @@ Route::middleware('auth:sanctum')->group(function(){
         ->group(function(){
             Route::post('/create', 'create');
             Route::get('/categories', 'index');
+            Route::patch('/update', 'update');
+            Route::delete('/{id}', 'delete');
+            Route::get('/{id}', 'show');
     });
 
     Route::prefix('/product')
@@ -54,20 +57,21 @@ Route::middleware('auth:sanctum')->group(function(){
         ->group(function(){
             Route::post('create', 'create');
             Route::delete('/delete/{id}', 'delete');
-            Route::get('order/{id}', 'basket_orders');
+            Route::get('/', 'basket_orders');
     });
 
     Route::prefix('/warehouse-basket')
         ->controller(WarehouseBasketController::class)
         ->group(function(){
-            Route::get('/all', 'all_basket'); // serach
+            Route::get('/all', 'all_basket');
+            Route::post('/deliver', 'setWarehouse');
     });
 
     Route::prefix('/warehouse')
         ->controller(WarehouseController::class)
         ->group(function(){
-            Route::post('/deliver', 'deliver');
-            Route::get('all', 'all');
+            Route::get('/', 'index');
+            Route::post('defective/products', 'defect');
     });
 });
 

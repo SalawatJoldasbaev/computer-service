@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignIdFor(App\Models\Product::class);
             $table->foreignIdFor(App\Models\Postman::class);
             $table->integer('count');
-            $table->json('codes');
+            $table->json('codes')->nullable();
             $table->integer('get_count')->default(0);
             $table->enum('unit', ['UZS', 'USD']);
             $table->double('price');

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Postman;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,6 +23,11 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+        Postman::create([
+            'full_name'=> 'Saliq',
+            'phone'=> '998906622939',
+            'inn'=> '123456789'
+        ]);
     }
 
     /**

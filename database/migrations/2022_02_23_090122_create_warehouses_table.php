@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('count');
             $table->json('codes');
             $table->date('date');
+            $table->boolean('active');
             $table->timestamps();
         });
     }
