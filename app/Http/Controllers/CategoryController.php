@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -63,7 +64,25 @@ class CategoryController extends Controller
         return BaseController::response($data);
     }
     public function delete($id){
-        $category = Category::find($id)->delete();
-        // return
+        $category = Category::find($id);
+        $final_response = [];
+        $this->parent_ids($category->parents, $final_response, $category->id);
+        Category::whereIn('id', $final_response)->delete();
+        $products = Product::whereIn('category_id', $final_response);
+        $ids = $products->value('id');
+        $products->delete();
+        return BaseController::success('successful deleted');
+    }
+
+    private function parent_ids($parents, &$final_response, $id = null){
+        if(!is_null($id)){
+            $final_response[] = $id;
+        }
+        foreach ($parents as $parent) {
+            $final_response[] = $parent->id;
+            if(!empty($parent->parents)){
+                $this->parent_ids($parent->parents, $final_response);
+            }
+        }
     }
 }

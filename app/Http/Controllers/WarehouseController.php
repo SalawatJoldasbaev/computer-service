@@ -22,7 +22,8 @@ class WarehouseController extends Controller
             if(!in_array($item->postman_id, $temp['products'][$item->product_id])){
                 if(!isset($products[$item->product_id])){
                     $products[$item->product_id] = [
-                        'name'=> $item->product->name,
+                        'product_id'=> $item->product->id,
+                        'product_name'=> $item->product->name,
                         'count'=> $item->count,
                         'codes'=> $item->codes
                     ];
@@ -43,7 +44,6 @@ class WarehouseController extends Controller
             'defective.*.count'=> 'required|integer',
             'defective.*.codes'=> 'required|array',
         ]);
-        $products = array_column($request->all(), 'product_id');
         if($validation->fails()){
             return BaseController::error($validation->errors()->first(), 422);
         }
