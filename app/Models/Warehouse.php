@@ -14,16 +14,25 @@ class Warehouse extends Model
         'codes'=> 'array'
     ];
 
-    public function scopeSetWarehouse($query, int $postman_id, int $product_id, int $count, array $codes){
+    public function scopeSetWarehouse($query, int $postman_id, int $product_id, int $count, string $code){
         $date = date('Y-m-d');
         $warehouse = $query->where('postman_id', $postman_id)
-            ->where('product_id', $product_id)->orderBy('id', 'desc')->first();
+            ->where('product_id', $product_id)
+            ->where('active', true)
+            ->orderBy('id', 'desc')->first();
+
         if($warehouse and $date == $warehouse->date){
+            $codes = array_merge($warehouse->codes,[
+                $code=>$count
+            ]);
             $warehouse->update([
                 'count'=> $warehouse->count+$count,
-                'codes'=> array_merge($warehouse->codes, $codes),
+                'codes'=> $codes
             ]);
         }elseif ($warehouse and $date != $warehouse->date) {
+            $codes = array_merge($warehouse->codes,[
+                $code=>$count
+            ]);
             $warehouse->update([
                 'active'=> false
             ]);
@@ -31,12 +40,15 @@ class Warehouse extends Model
                 'postman_id'=> $postman_id,
                 'product_id'=> $product_id,
                 'count'=> $warehouse->count+$count,
-                'codes'=> array_merge($warehouse->codes, $codes),
+                'codes'=> $codes,
                 'date'=> $date,
                 'active'=> true
             ]);
         }else{
-            $this->create([
+            $codes = [
+                $code=>$count
+            ];
+            $warehouse = $this->create([
                 'postman_id'=> $postman_id,
                 'product_id'=> $product_id,
                 'count'=> $count,
@@ -45,9 +57,12 @@ class Warehouse extends Model
                 'active'=> true
             ]);
         }
-        $warehouse = $query->where('postman_id', $postman_id)
-            ->where('product_id', $product_id)->orderBy('id', 'desc')->first();
-        return $warehouse;
+        // if($warehouse and $code){
+            ProductCode::where('code', $code)->first()->update([
+                'warehouse_id'=> $warehouse->id,
+            ]);
+        // }
+
     }
 
     public function product(){

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Warehouse;
+use App\Models\ProductCode;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\Warehouse_order;
 use App\Models\Warehouse_basket;
 use App\Http\Controllers\BaseController;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class WarehouseOrderController extends Controller
@@ -21,6 +23,7 @@ class WarehouseOrderController extends Controller
         if($validation->fails()){
             return BaseController::error($validation->errors()->first(),422);
         }
+
         $orders = $request->orders;
         $price_uzs=0;
         $price_usd=0;
@@ -37,13 +40,12 @@ class WarehouseOrderController extends Controller
             'postman_id'=>$request->postman_id,
             'uzs_price'=>$price_uzs,
             'usd_price'=>$price_usd,
-            'description'=>$request->description
+            'description'=>$request->description,
+            'ordered_at'=> Carbon::now()
         ]);
 
-        $warehouse_orers = [];
-
         foreach($orders as $order){
-            $warehouse_orers[] = [
+            $warehouse_orers = [
                 'warehouse_basket_id'=>$basket->id,
                 'product_id'=>$order['product_id'],
                 'postman_id'=>$request->postman_id,
@@ -52,11 +54,8 @@ class WarehouseOrderController extends Controller
                 'price'=>$order['price'],
                 'description'=>$order['description']
             ];
+            Warehouse_order::create($warehouse_orers);
         }
-        Warehouse_order::upsert($warehouse_orers,[
-            'warehouse_basket_id', 'product_id', 'postman_id',
-            'count', 'unit', 'price', 'description'
-        ]);
 
         return BaseController::response($basket->toArray());
     }
@@ -96,7 +95,8 @@ class WarehouseOrderController extends Controller
                 'product_name'=> $order->product->name,
                 'description'=> $order->description,
                 'count'=> $order->count,
-                'codes'=> []
+                'code'=> $order->code,
+                'qr_link'=> env('APP_URL').'/code/'.$order->code
             ];
         }
         if($search){

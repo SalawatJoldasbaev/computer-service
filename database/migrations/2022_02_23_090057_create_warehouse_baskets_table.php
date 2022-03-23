@@ -21,6 +21,8 @@ return new class extends Migration
             $table->double('uzs_price');
             $table->string('description')->nullable();
             $table->boolean('is_deliver')->default(false);
+            $table->timestamp('ordered_at')->nullable();
+            $table->timestamp('delivered_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

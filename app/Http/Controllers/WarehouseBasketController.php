@@ -6,6 +6,7 @@ use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse_order;
 use App\Models\Warehouse_basket;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -40,11 +41,13 @@ class WarehouseBasketController extends Controller
             'orders.*.order_id'=> 'required|integer',
             'orders.*.product_id'=> 'required|integer',
             'orders.*.count'=> 'required|integer',
-            'orders.*.codes'=> 'required|array',
+            'orders.*.code'=> 'nullable|string',
         ]);
+
         if($validation->fails()){
             return BaseController::error($validation->errors()->first(), 422);
         }
+
         $basket_id = $request->basket_id;
         $basket = Warehouse_basket::find($basket_id);
         if($basket->is_deliver == true){
@@ -58,12 +61,12 @@ class WarehouseBasketController extends Controller
                 $order->description = $get_order['description'];
             }
             $order->get_count = $get_order['count'];
-            $order->codes = $get_order['codes'];
             $order->save();
-            Warehouse::SetWarehouse($order->postman_id, $order->product_id, $get_order['count'], $get_order['codes']);
+            Warehouse::SetWarehouse($order->postman_id, $order->product_id, $get_order['count'], $order->code);
         }
         $basket->update([
-            'is_deliver'=> true
+            'is_deliver'=> true,
+            'delivered_at'=> Carbon::now()
         ]);
         return BaseController::success();
     }
