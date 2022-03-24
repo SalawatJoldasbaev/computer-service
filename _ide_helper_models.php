@@ -163,6 +163,41 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\ProductCode
+ *
+ * @property int $id
+ * @property int $postman_id
+ * @property int $product_id
+ * @property int|null $warehouse_id
+ * @property int|null $warehouse_basket_id
+ * @property string $code
+ * @property float $cost_price
+ * @property float $count
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Warehouse_basket|null $basket
+ * @property-read \App\Models\Postman|null $postman
+ * @property-read \App\Models\Product|null $product
+ * @property-read \App\Models\Warehouse|null $warehouse
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCode newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCode newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCode query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCode whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCode whereCostPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCode whereCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCode whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCode whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCode wherePostmanId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCode whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCode whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCode whereWarehouseBasketId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCode whereWarehouseId($value)
+ */
+	class ProductCode extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Role
  *
  * @property int $id
@@ -252,14 +287,17 @@ namespace App\Models{
  * @property int $postman_id
  * @property int $product_id
  * @property int $count
- * @property mixed $codes
+ * @property array $codes
  * @property string $date
+ * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Product|null $product
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse query()
- * @method static \Illuminate\Database\Eloquent\Builder|Warehouse setWarehouse(int $postman_id, int $product_id, int $count, array $codes)
+ * @method static \Illuminate\Database\Eloquent\Builder|Warehouse setWarehouse(int $postman_id, int $product_id, int $count, string $code)
+ * @method static \Illuminate\Database\Eloquent\Builder|Warehouse whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse whereCodes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse whereCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse whereCreatedAt($value)
@@ -283,6 +321,8 @@ namespace App\Models{
  * @property float $uzs_price
  * @property string|null $description
  * @property int $is_deliver
+ * @property string|null $ordered_at
+ * @property string|null $delivered_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
@@ -296,9 +336,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_basket whereAdminId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_basket whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_basket whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_basket whereDeliveredAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_basket whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_basket whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_basket whereIsDeliver($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_basket whereOrderedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_basket wherePostmanId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_basket whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_basket whereUsdPrice($value)
@@ -316,7 +358,7 @@ namespace App\Models{
  * @property int $product_id
  * @property int $postman_id
  * @property int $count
- * @property array|null $codes
+ * @property string|null $code
  * @property int $get_count
  * @property string $unit
  * @property float $price
@@ -331,7 +373,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_order newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_order query()
- * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_order whereCodes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_order whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_order whereCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_order whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse_order whereDeletedAt($value)
