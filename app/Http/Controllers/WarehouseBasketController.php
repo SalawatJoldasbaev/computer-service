@@ -14,6 +14,7 @@ class WarehouseBasketController extends Controller
 {
     public function all_basket(Request $request){
         $baskets = Warehouse_basket::where('is_deliver',false)->get();
+        // Warehouse_basket::destroy($request->id ?? $request->ids)
         $data = [];
         foreach($baskets as $basket){
             $data[] = [

@@ -96,7 +96,7 @@ class WarehouseOrderController extends Controller
                 'description'=> $order->description,
                 'count'=> $order->count,
                 'code'=> $order->code,
-                'qr_link'=> env('APP_URL').'/code/'.$order->code
+                'qr_link'=> env('APP_URL').'/api/code/?code='.$order->code
             ];
         }
         if($search){
