@@ -32,11 +32,11 @@ class QrCodeController extends Controller
                 'name'=> $data->product->name
             ],
             'warehouse'=> [
-                'count'=> $data->warehouse->count,
-                'code_count'=> $data->warehouse->codes[$code],
+                'count'=> $data->warehouse->count ?? 0,
+                'code_count'=> $data->warehouse->codes[$code] ?? 0,
             ],
             'cost_price'=> $data->cost_price,
-            'count'=> 0,
+            'count'=> $data->count,
             'ordered_at'=> $data->basket->ordered_at,
             'delivered_at'=> $data->basket->delivered_at,
         ];
