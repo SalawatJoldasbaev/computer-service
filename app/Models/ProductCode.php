@@ -19,7 +19,11 @@ class ProductCode extends Model
     }
 
     public function warehouse(){
-        return $this->belongsTo(Warehouse::class);
+        if(is_null($this->warehouse_basket_id)){
+            return $this->belongsTo(Warehouse::class);
+        }else{
+            return $this->belongsTo(Warehouse::class, 'product_id', 'product_id')->where('postman_id', $this->postman_id);
+        }
     }
 
     public function basket(){
