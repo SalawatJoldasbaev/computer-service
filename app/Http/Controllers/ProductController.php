@@ -1,11 +1,10 @@
 <?php
-//Aysdjkfsdhfbn
+
 namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -21,6 +20,7 @@ class ProductController extends Controller
             'product.min_price' => 'required',
             'product.max_price' => 'required',
             'product.whole_price' => 'required',
+            'product.min_product' => 'required',
             'product.unit' => 'required'
         ]);
         if ($validation->fails()) {
@@ -33,7 +33,8 @@ class ProductController extends Controller
             'cost_price' => $request->product['cost_price'],
             'min_price' => $request->product['min_price'],
             'whole_price' => $request->product['whole_price'],
-            'max_price' => $request->product['max_price']
+            'max_price' => $request->product['max_price'],
+            'min_product' => $request->product['min_product']
         ]);
 
         return BaseController::success();
@@ -49,6 +50,7 @@ class ProductController extends Controller
             'category_id',
             'name',
             'brand',
+            'min_product',
             'cost_price',
             'max_price',
             'whole_price',
@@ -97,6 +99,7 @@ class ProductController extends Controller
             'product.min_price' => 'required',
             'product.max_price' => 'required',
             'product.whole_price' => 'required',
+            'product.min_product' => 'required',
             'product.unit' => 'required'
         ]);
         if ($validation->fails()) {
@@ -114,7 +117,8 @@ class ProductController extends Controller
                     'cost_price' => $request->product['cost_price'],
                     'min_price' => $request->product['min_price'],
                     'whole_price' => $request->product['whole_price'],
-                    'max_price' => $request->product['max_price']
+                    'max_price' => $request->product['max_price'],
+                    'min_product' => $request->product['min_product']
                 ]);
             return BaseController::success();
         }

@@ -23,31 +23,34 @@ return new class extends Migration
             $table->double('max_price');
             $table->double('whole_price');
             $table->double('min_price');
+            $table->double('min_product')->nullable();
             $table->enum('unit', ['USD', 'UZS']);
             $table->timestamps();
             $table->softDeletes();
         });
         Product::create([
-            'category_id'=>3,
-            'name'=> 'Kerek 1',
-            'brand'=> 'Kerek 1',
-            'cost_price'=> 5000,
-            'max_price'=> 1,
-            'whole_price'=> 1,
-            'min_price'=> 1,
-            'min_price'=> 1,
-            'unit'=> 'USD'
+            'category_id' => 3,
+            'name' => 'Kerek 1',
+            'brand' => 'Kerek 1',
+            'cost_price' => 5000,
+            'max_price' => 1,
+            'whole_price' => 1,
+            'min_price' => 1,
+            'min_price' => 1,
+            'unit' => 'USD',
+            'min_product' => 10
         ]);
         Product::create([
-            'category_id'=>3,
-            'name'=> 'Kerek 2',
-            'brand'=> 'Kerek 2',
-            'cost_price'=> 5000,
-            'max_price'=> 1,
-            'whole_price'=> 1,
-            'min_price'=> 1,
-            'min_price'=> 1,
-            'unit'=> 'USD'
+            'category_id' => 3,
+            'name' => 'Kerek 2',
+            'brand' => 'Kerek 2',
+            'cost_price' => 5000,
+            'max_price' => 1,
+            'whole_price' => 1,
+            'min_price' => 1,
+            'min_price' => 1,
+            'unit' => 'USD',
+            'min_product' => 10,
         ]);
     }
 
