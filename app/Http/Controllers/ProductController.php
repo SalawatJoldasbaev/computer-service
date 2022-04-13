@@ -20,7 +20,7 @@ class ProductController extends Controller
             'product.min_price' => 'required',
             'product.max_price' => 'required',
             'product.whole_price' => 'required',
-            'product.min_product' => 'required',
+            'product.min_count' => 'required',
             'product.unit' => 'required'
         ]);
         if ($validation->fails()) {
@@ -34,7 +34,7 @@ class ProductController extends Controller
             'min_price' => $request->product['min_price'],
             'whole_price' => $request->product['whole_price'],
             'max_price' => $request->product['max_price'],
-            'min_product' => $request->product['min_product']
+            'min_count' => $request->product['min_count']
         ]);
 
         return BaseController::success();
@@ -50,7 +50,7 @@ class ProductController extends Controller
             'category_id',
             'name',
             'brand',
-            'min_product',
+            'min_count',
             'cost_price',
             'max_price',
             'whole_price',
@@ -99,7 +99,7 @@ class ProductController extends Controller
             'product.min_price' => 'required',
             'product.max_price' => 'required',
             'product.whole_price' => 'required',
-            'product.min_product' => 'required',
+            'product.min_count' => 'required',
             'product.unit' => 'required'
         ]);
         if ($validation->fails()) {
@@ -118,7 +118,7 @@ class ProductController extends Controller
                     'min_price' => $request->product['min_price'],
                     'whole_price' => $request->product['whole_price'],
                     'max_price' => $request->product['max_price'],
-                    'min_product' => $request->product['min_product']
+                    'min_count' => $request->product['min_count']
                 ]);
             return BaseController::success();
         }

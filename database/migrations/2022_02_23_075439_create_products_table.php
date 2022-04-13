@@ -23,7 +23,7 @@ return new class extends Migration
             $table->double('max_price');
             $table->double('whole_price');
             $table->double('min_price');
-            $table->double('min_product')->nullable();
+            $table->double('min_count')->nullable();
             $table->enum('unit', ['USD', 'UZS']);
             $table->timestamps();
             $table->softDeletes();
@@ -38,7 +38,7 @@ return new class extends Migration
             'min_price' => 1,
             'min_price' => 1,
             'unit' => 'USD',
-            'min_product' => 10
+            'min_count' => 10
         ]);
         Product::create([
             'category_id' => 3,
@@ -50,7 +50,7 @@ return new class extends Migration
             'min_price' => 1,
             'min_price' => 1,
             'unit' => 'USD',
-            'min_product' => 10,
+            'min_count' => 10,
         ]);
     }
 
