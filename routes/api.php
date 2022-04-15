@@ -7,6 +7,7 @@ use App\Http\Controllers\PostmanController;
 use App\Http\Controllers\ProductController;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HistoryOrderController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseOrderController;
@@ -69,7 +70,8 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/all', 'all_basket');
             Route::post('/deliver', 'setWarehouse');
         });
-
+    Route::get('/orders/history', [HistoryOrderController::class, 'index']);
+    Route::get('/orders/history/{basket_id}', [HistoryOrderController::class, 'orders']);
     Route::prefix('/warehouse')
         ->controller(WarehouseController::class)
         ->group(function () {

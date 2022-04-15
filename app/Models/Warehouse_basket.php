@@ -9,7 +9,9 @@ class Warehouse_basket extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
-
+    protected $casts = [
+        'is_deliver' => 'boolean'
+    ];
     public function Postman()
     {
         return $this->belongsTo(Postman::class)->withTrashed();
