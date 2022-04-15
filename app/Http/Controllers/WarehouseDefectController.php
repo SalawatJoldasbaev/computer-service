@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\WarehouseItemDefect;
 use App\Models\WarehouseBasketDefect;
 use App\Http\Requests\WarehouseSetBasketRequest;
+use Carbon\Carbon;
 
 class WarehouseDefectController extends Controller
 {
@@ -129,5 +130,41 @@ class WarehouseDefectController extends Controller
             'status' => 'finished'
         ]);
         return BaseController::success();
+    }
+
+    public function index(Request $request)
+    {
+        $from = $request->from ?? Carbon::today();
+        $to = $request->to ?? Carbon::today();
+
+        $warehouseBaskets = WarehouseBasketDefect::whereDate('updated_at', '>=', $from)
+            ->whereDate('updated_at', '<=', $to)
+            ->paginate(30);
+        $final = [];
+        $temp = [];
+        foreach ($warehouseBaskets as $basket) {
+            $temp = [
+                'basket_id' => $basket->id,
+                'status' => $basket->status,
+                'description' => $basket->description,
+                'admin' => [
+                    'id' => $basket->admin_id,
+                    'name' => $basket->admin->name
+                ],
+            ];
+            foreach ($basket->items as $item) {
+                $temp['orders'][] = [
+                    'postman_id' => $item->postman_id,
+                    'postman_name' => $item->postman->full_name,
+                    'product_id' => $item->product_id,
+                    'product_name' => $item->product->name,
+                    'count' => $item->count,
+                    'code' => $item->code,
+                ];
+            }
+            $final[] = $temp;
+            $temp = [];
+        }
+        return BaseController::response($final);
     }
 }

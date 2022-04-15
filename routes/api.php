@@ -83,6 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/defect/items/delete', [WarehouseDefectController::class, 'deleteItem']);
     Route::patch('/defect/item/update', [WarehouseDefectController::class, 'updateItem']);
     Route::post('/defect/confirm', [WarehouseDefectController::class, 'confirm']);
+    Route::get('/defect/history', [WarehouseDefectController::class, 'index']);
 });
 Route::get('/code/', [QrCodeController::class, 'generate']);
 Route::get('/qr/{text}', function ($text) {

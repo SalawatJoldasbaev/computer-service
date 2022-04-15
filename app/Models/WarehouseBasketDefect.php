@@ -15,4 +15,14 @@ class WarehouseBasketDefect extends Model
     {
         return $this->hasMany(WarehouseItemDefect::class);
     }
+
+    public function scopeFinished($query)
+    {
+        return $query->where('status', 'finished');
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
+    }
 }
