@@ -3,13 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\PostmanController;
 use App\Http\Controllers\ProductController;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\HistoryOrderController;
-use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\HistoryOrderController;
+use App\Http\Controllers\AccountNumberController;
 use App\Http\Controllers\WarehouseOrderController;
 use App\Http\Controllers\WarehouseBasketController;
 use App\Http\Controllers\WarehouseDefectController;
@@ -25,7 +26,8 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/single/{id}', 'single');
             Route::get('/all', 'all');
         });
-
+    Route::get('/postman/{id}/payment/history', [AccountNumberController::class, 'index']);
+    Route::patch('/postman/{id}/payment/history/update', [AccountNumberController::class, 'update']);
     Route::prefix('/postman')
         ->controller(PostmanController::class)
         ->group(function () {

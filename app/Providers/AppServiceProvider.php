@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Warehouse_basket;
 use App\Models\Warehouse_order;
+use App\Observers\WarehouseBasketObserver;
 use App\Observers\WarehouseOrderObserver;
 use Illuminate\Support\ServiceProvider;
 
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Warehouse_order::observe(WarehouseOrderObserver::class);
+        Warehouse_basket::observe(WarehouseBasketObserver::class);
     }
 }
