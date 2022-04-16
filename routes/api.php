@@ -80,6 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/', 'index');
             Route::post('defective/products', 'defect');
         });
+    Route::get('/warehouse/costprice', [WarehouseController::class, 'cost_price']);
     Route::get('/code/{code}', [QrCodeController::class, 'code']);
 
     Route::post('/defect/set-item', [WarehouseDefectController::class, 'setBasket']);

@@ -18,20 +18,21 @@ class WarehouseOrderObserver
     {
         $code = Str::random(5);
         $create = ProductCode::where('code', $code)->first();
-        while($create){
+        while ($create) {
             $code = Str::random(5);
             $create = ProductCode::where('code', $code)->first();
         }
         $warehouse_order->code = $code;
 
-        if(!$create){
+        if (!$create) {
             $create = ProductCode::create([
-                'postman_id'=> $warehouse_order->postman_id,
-                'product_id'=> $warehouse_order->product_id,
-                'warehouse_basket_id'=> $warehouse_order->warehouse_basket_id,
-                'count'=> $warehouse_order->count,
-                'code'=> $code,
-                'cost_price'=> $warehouse_order->price
+                'postman_id' => $warehouse_order->postman_id,
+                'product_id' => $warehouse_order->product_id,
+                'warehouse_basket_id' => $warehouse_order->warehouse_basket_id,
+                'count' => $warehouse_order->count,
+                'code' => $code,
+                'unit' => $warehouse_order->unit,
+                'cost_price' => $warehouse_order->price
             ]);
         }
     }

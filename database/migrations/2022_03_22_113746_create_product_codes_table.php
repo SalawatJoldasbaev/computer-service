@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignIdFor(App\Models\Warehouse::class)->nullable();
             $table->foreignIdFor(App\Models\Warehouse_basket::class)->nullable();
             $table->string('code')->unique();
+            $table->enum('unit', ['UZS', 'USD']);
             $table->double('cost_price');
             $table->double('count')->default(0);
             $table->timestamps();
