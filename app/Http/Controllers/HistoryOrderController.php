@@ -33,7 +33,7 @@ class HistoryOrderController extends Controller
                     'usd' => $basket->usd_price,
                     'uzs' => $basket->uzs_price,
                 ],
-                'is_deliver' => $basket->is_deliver,
+                'status' => $basket->status,
                 'description' => $basket->description,
                 'ordered_at' => $basket->ordered_at,
                 'delivered_at' => $basket->delivered_at,
@@ -60,7 +60,8 @@ class HistoryOrderController extends Controller
                 'arrival_count' => $order->get_count,
                 'unit' => $order->unit,
                 'price' => $order->price,
-                'description' => $order->description
+                'description' => $order->description,
+                'qr_link' => env('APP_URL') . '/api/code/?code=' . $order->code,
             ];
         }
         return BaseController::response($final);

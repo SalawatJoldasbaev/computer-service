@@ -14,45 +14,47 @@ use Illuminate\Support\Facades\Validator;
 
 class WarehouseOrderController extends Controller
 {
-    public function create(Request $request){
+    public function create(Request $request)
+    {
         $admin = $request->user();
         $validation = Validator::make($request->all(), [
-            'postman_id'=>'required|exists:App\Models\Postman,id',
-            'orders'=>'required'
+            'postman_id' => 'required|exists:App\Models\Postman,id',
+            'uzs' => 'required',
+            'usd' => 'required',
+            'description' => 'nullable',
+            'orders' => 'required|array',
+            'orders.*.product_id' => 'required|exists:products,id',
+            'orders.*.count' => 'required',
+            'orders.*.unit' => 'required',
+            'orders.*.price' => 'required',
+            'orders.*.description' => 'nullable'
         ]);
-        if($validation->fails()){
-            return BaseController::error($validation->errors()->first(),422);
+        if ($validation->fails()) {
+            return BaseController::error($validation->errors()->first(), 422);
         }
 
         $orders = $request->orders;
-        $price_uzs=0;
-        $price_usd=0;
-        foreach($orders as $order){
-            if($order['unit'] == "UZS"){
-                $price_uzs += $order['price']*$order['count'];
-            }else{
-                $price_usd += $order['price']*$order['count'];
-            }
-        }
+        $price_uzs = $request->uzs;
+        $price_usd = $request->usd;
 
         $basket = Warehouse_basket::create([
-            'admin_id'=>$admin->id,
-            'postman_id'=>$request->postman_id,
-            'uzs_price'=>$price_uzs,
-            'usd_price'=>$price_usd,
-            'description'=>$request->description,
-            'ordered_at'=> Carbon::now()
+            'admin_id' => $admin->id,
+            'postman_id' => $request->postman_id,
+            'uzs_price' => $price_uzs,
+            'usd_price' => $price_usd,
+            'description' => $request->description,
+            'ordered_at' => Carbon::now()
         ]);
 
-        foreach($orders as $order){
+        foreach ($orders as $order) {
             $warehouse_orers = [
-                'warehouse_basket_id'=>$basket->id,
-                'product_id'=>$order['product_id'],
-                'postman_id'=>$request->postman_id,
-                'count'=>$order['count'],
-                'unit'=>$order['unit'],
-                'price'=>$order['price'],
-                'description'=>$order['description']
+                'warehouse_basket_id' => $basket->id,
+                'product_id' => $order['product_id'],
+                'postman_id' => $request->postman_id,
+                'count' => $order['count'],
+                'unit' => $order['unit'],
+                'price' => $order['price'],
+                'description' => $order['description']
             ];
             Warehouse_order::create($warehouse_orers);
         }
@@ -60,7 +62,8 @@ class WarehouseOrderController extends Controller
         return BaseController::response($basket->toArray());
     }
 
-    public function delete($order_id){
+    public function delete($order_id)
+    {
         $order = Warehouse_order::where('id', $order_id)->first();
         $basket_id = $order->warehouse_basket_id;
         $order->delete();
@@ -69,44 +72,44 @@ class WarehouseOrderController extends Controller
         $price_usd = $basket->where('unit', 'USD')->sum('price');
 
         Warehouse_basket::find($basket_id)
-        ->update([
-            'price_uzs'=>$price_uzs,
-            'price_usd'=>$price_usd
-        ]);
+            ->update([
+                'price_uzs' => $price_uzs,
+                'price_usd' => $price_usd
+            ]);
 
         return BaseController::success();
     }
 
-    public function basket_orders(Request $request){
+    public function basket_orders(Request $request)
+    {
         $search = $request->search;
         $basket_id = $request->basket_id;
 
         $basket = Warehouse_basket::find($basket_id);
         $orders = $basket->orders;
         $final_response = [
-            'basket_id'=> $basket->id,
-            'description'=> $basket->description,
-            'orders'=> [],
+            'basket_id' => $basket->id,
+            'description' => $basket->description,
+            'orders' => [],
         ];
         foreach ($orders as $order) {
             $final_response['orders'][] = [
-                'order_id'=> $order->id,
-                'product_id'=> $order->product->id,
-                'product_name'=> $order->product->name,
-                'description'=> $order->description,
-                'count'=> $order->count,
-                'code'=> $order->code,
-                'qr_link'=> env('APP_URL').'/api/code/?code='.$order->code
+                'order_id' => $order->id,
+                'product_id' => $order->product->id,
+                'product_name' => $order->product->name,
+                'description' => $order->description,
+                'count' => $order->count,
+                'code' => $order->code,
+                'qr_link' => env('APP_URL') . '/api/code/?code=' . $order->code
             ];
         }
-        if($search){
+        if ($search) {
             $collect = collect($final_response['orders']);
-            $searched = $collect->filter(function($item) use ($search){
+            $searched = $collect->filter(function ($item) use ($search) {
                 return stripos($item['product_name'], $search) !== false;
             });
             $final_response['orders'] = $searched->values();
         }
         return BaseController::response($final_response);
     }
-
 }

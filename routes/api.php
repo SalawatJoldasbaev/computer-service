@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountingOrderReviewController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
@@ -65,7 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/delete/{id}', 'delete');
             Route::get('/', 'basket_orders');
         });
-
+    Route::get('/warehouse/baskets/accounting/', [AccountingOrderReviewController::class, 'baskets']);
     Route::prefix('/warehouse-basket')
         ->controller(WarehouseBasketController::class)
         ->group(function () {

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->double('usd_price');
             $table->double('uzs_price');
             $table->string('description')->nullable();
-            $table->boolean('is_deliver')->default(false);
+            $table->enum('status', ['pending', 'warehouse', 'confirmed']);
             $table->timestamp('ordered_at')->nullable();
             $table->timestamp('delivered_at')->nullable();
             $table->timestamps();

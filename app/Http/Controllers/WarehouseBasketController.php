@@ -17,8 +17,7 @@ class WarehouseBasketController extends Controller
 {
     public function all_basket(Request $request)
     {
-        $baskets = Warehouse_basket::where('is_deliver', false)->get();
-        // Warehouse_basket::destroy($request->id ?? $request->ids)
+        $baskets = Warehouse_basket::where('status', 'pending')->get();
         $data = [];
         foreach ($baskets as $basket) {
             $data[] = [
@@ -56,7 +55,7 @@ class WarehouseBasketController extends Controller
 
         $basket_id = $request->basket_id;
         $basket = Warehouse_basket::find($basket_id);
-        if ($basket->is_deliver == true) {
+        if ($basket->status != 'pending') {
             return BaseController::error('basket not found', 404);
         }
         $orders = collect($request->orders);
@@ -71,7 +70,7 @@ class WarehouseBasketController extends Controller
             Warehouse::SetWarehouse($order->postman_id, $order->product_id, $get_order['count'], $order->code);
         }
         $basket->update([
-            'is_deliver' => true,
+            'status' => 'warehouse',
             'delivered_at' => Carbon::now()
         ]);
         return BaseController::success();

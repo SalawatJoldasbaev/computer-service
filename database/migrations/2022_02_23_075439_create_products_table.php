@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(App\Models\Category::class);
             $table->string('name');
-            $table->string('brand');
+            $table->string('brand')->nullable();
             $table->double('cost_price');
             $table->double('max_price');
             $table->double('whole_price');

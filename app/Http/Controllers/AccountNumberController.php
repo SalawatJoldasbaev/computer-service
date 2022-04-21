@@ -24,7 +24,7 @@ class AccountNumberController extends Controller
                 'price' => $item->additional['price'],
                 'basket' => [
                     'description' => $item->basket->description,
-                    'is_deliver' => $item->basket->is_deliver,
+                    'status' => $item->basket->status,
                     'ordered_at' => $item->basket->ordered_at,
                     'delivered_at' => $item->basket->delivered_at,
                 ]
