@@ -157,7 +157,7 @@ class WarehouseDefectController extends Controller
                     'postman_id' => $item->postman_id,
                     'postman_name' => $item->postman->full_name,
                     'product_id' => $item->product_id,
-                    'product_name' => $item->product->name,
+                    'product_name' => $item->product?->name,
                     'count' => $item->count,
                     'code' => $item->code,
                 ];
