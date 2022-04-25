@@ -81,7 +81,7 @@ class WarehouseDefectController extends Controller
 
     public function deleteItem(Request $request)
     {
-        WarehouseItemDefect::destroy($request->all());
+        WarehouseItemDefect::destroy($request->ids);
         return BaseController::success();
     }
 
