@@ -66,7 +66,7 @@ class WarehouseDefectController extends Controller
         }
         $items = [];
         foreach ($basket->items as $item) {
-            $warehouse = Warehouse::active()->where('postman_id', $item->postman_id)
+            $warehouse = Warehouse::where('active', true)->where('postman_id', $item->postman_id)
                 ->where('product_id', $item->product_id)->first();
             $items[] = [
                 'item_id' => $item->id,
