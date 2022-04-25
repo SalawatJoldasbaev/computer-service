@@ -66,6 +66,8 @@ class WarehouseDefectController extends Controller
         }
         $items = [];
         foreach ($basket->items as $item) {
+            $warehouse = Warehouse::active()->where('postman_id', $item->postman_id)
+                ->where('product_id', $item->product_id)->first();
             $items[] = [
                 'item_id' => $item->id,
                 'postman_id' => $item->postman_id,
@@ -74,6 +76,10 @@ class WarehouseDefectController extends Controller
                 'product_name' => $item->product->name,
                 'code' => $item->code,
                 'count' => $item->count,
+                'warehouse' => [
+                    'id' => $warehouse->id,
+                    'count' => $warehouse->codes[$item->code]
+                ]
             ];
         }
         return $items;
@@ -91,9 +97,13 @@ class WarehouseDefectController extends Controller
         if (!$item) {
             return BaseController::error('not found item', 404);
         }
-        $item->update([
-            'count' => $request->count
-        ]);
+        if ($request->count == 0) {
+            $item->delete();
+        } else {
+            $item->update([
+                'count' => $request->count
+            ]);
+        }
         return BaseController::success();
     }
 
