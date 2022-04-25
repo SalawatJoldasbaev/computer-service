@@ -14,8 +14,8 @@ class HistoryOrderController extends Controller
         $to = $request->to ?? Carbon::today();
         $postman_id = $request->postman_id;
 
-        $warehouseBasket = Warehouse_basket::whereDate('ordered_at', '>=', $from)
-            ->whereDate('ordered_at', '<=', $to)
+        $warehouseBasket = Warehouse_basket::whereIn('status', ['warehouse', 'confirmed'])->whereDate('delivered_at', '>=', $from)
+            ->whereDate('delivered_at', '<=', $to)
             ->when($postman_id, function ($query) use ($postman_id) {
                 return $query->where('postman_id', $postman_id);
             })
