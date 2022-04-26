@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductCode;
+use App\Models\WarehouseBasketDefect;
 use Illuminate\Http\Request;
+use App\Models\WarehouseItemDefect;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class QrCodeController extends Controller
@@ -19,8 +21,16 @@ class QrCodeController extends Controller
     public function code($code)
     {
         $data = ProductCode::where('code', $code)->first();
+        $item = WarehouseItemDefect::where('code', $code)->first();
+        $count = $data->count;
         if (!$data) {
             return BaseController::error('code not found', 404);
+        }
+        if ($item) {
+            $basket = WarehouseBasketDefect::find($item->warehouse_basket_defect_id);
+            if ($basket->status == 'draft') {
+                $count -= $item->count;
+            }
         }
 
         $final = [
@@ -39,7 +49,7 @@ class QrCodeController extends Controller
             ] : null,
             'unit' => $data->unit,
             'cost_price' => $data->cost_price,
-            'count' => $data->count,
+            'count' => $count,
             'ordered_at' => $data->basket->ordered_at,
             'delivered_at' => $data->basket->delivered_at,
         ];
