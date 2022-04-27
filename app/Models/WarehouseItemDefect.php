@@ -17,6 +17,6 @@ class WarehouseItemDefect extends Model
 
     public function postman()
     {
-        return $this->belongsTo(Postman::class);
+        return $this->belongsTo(Postman::class)->withTrashed();
     }
 }
