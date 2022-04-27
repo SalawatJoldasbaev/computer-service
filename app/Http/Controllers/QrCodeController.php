@@ -23,13 +23,14 @@ class QrCodeController extends Controller
         $data = ProductCode::where('code', $code)->first();
         $item = WarehouseItemDefect::where('code', $code)->first();
         $count = $data->count;
+        $defect = 0;
         if (!$data) {
             return BaseController::error('code not found', 404);
         }
         if ($item) {
             $basket = WarehouseBasketDefect::find($item->warehouse_basket_defect_id);
             if ($basket->status == 'draft') {
-                $count -= $item->count;
+                $defect = $item->count;
             }
         }
 
@@ -49,7 +50,8 @@ class QrCodeController extends Controller
             ] : null,
             'unit' => $data->unit,
             'cost_price' => $data->cost_price,
-            'count' => $count,
+            'count' => $data->warehouse->count,
+            'defect' => $defect,
             'ordered_at' => $data->basket->ordered_at,
             'delivered_at' => $data->basket->delivered_at,
         ];
