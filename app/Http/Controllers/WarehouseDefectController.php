@@ -113,22 +113,26 @@ class WarehouseDefectController extends Controller
         $items = $basket->items;
 
         $error = ['error' => false, 'products' => ''];
+        $i = 0;
         foreach ($items as $item) {
             $code = ProductCode::where('code', $item['code'])->first();
-            if ($code->warehouse->codes[$item['code']] < $item['count']) {
+            $warehouse = Warehouse::where('product_id', $code->product_id)
+                ->where('active', true)->first();
+            if ($warehouse->codes[$item['code']] < $item['count']) {
                 $error['error'] = true;
                 $error['products'] .= $code->product->name . ', ';
             }
+            $i++;
         }
 
         if ($error['error'] === true) {
             return BaseController::error($error['products'] . 'The products are not enough', 409);
         }
 
-        foreach ($items as $items) {
+        foreach ($items as $item) {
             $code = ProductCode::where('code', $item['code'])->first();
             $warehouse = Warehouse::where('product_id', $code->product_id)
-                ->where('id', $code->warehouse_id)->first();
+                ->where('active', true)->first();
             $codes = $warehouse->codes;
             $codes[$item['code']] -= $item['count'];
             $warehouse->update([

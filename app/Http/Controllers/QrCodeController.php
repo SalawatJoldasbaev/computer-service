@@ -49,7 +49,6 @@ class QrCodeController extends Controller
             ] : null,
             'unit' => $data->unit,
             'cost_price' => $data->cost_price,
-            'count' => $data->warehouse->count ?? 0,
             'defect' => $defect,
             'ordered_at' => $data->basket->ordered_at,
             'delivered_at' => $data->basket->delivered_at,
