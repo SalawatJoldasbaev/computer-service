@@ -62,7 +62,7 @@ class WarehouseDefectController extends Controller
     {
         $basket = $this->getBasket($request->user());
         if (!$basket) {
-            return BaseController::error('Basket not found', 404);
+            return BaseController::success('basket is empty');
         }
         $items = [];
         foreach ($basket->items as $item) {

@@ -22,7 +22,6 @@ class QrCodeController extends Controller
     {
         $data = ProductCode::where('code', $code)->first();
         $item = WarehouseItemDefect::where('code', $code)->first();
-        $count = $data->count;
         $defect = 0;
         if (!$data) {
             return BaseController::error('code not found', 404);
