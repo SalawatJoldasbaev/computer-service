@@ -153,7 +153,7 @@ class WarehouseDefectController extends Controller
 
         $warehouseBaskets = WarehouseBasketDefect::whereDate('updated_at', '>=', $from)
             ->whereDate('updated_at', '<=', $to)
-            ->where('status', 'draft')
+            ->where('status', 'finished')
             ->paginate(30);
         $final = [];
         $temp = [];
