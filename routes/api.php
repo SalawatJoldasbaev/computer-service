@@ -86,7 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/defect/set-item', [WarehouseDefectController::class, 'setBasket']);
     Route::get('/defect/get-items', [WarehouseDefectController::class, 'getBasketItems']);
-    Route::delete('/defect/items/delete', [WarehouseDefectController::class, 'deleteItem']);
+    Route::delete('/defect/items/delete/{id}', [WarehouseDefectController::class, 'deleteItem']);
     Route::patch('/defect/item/update', [WarehouseDefectController::class, 'updateItem']);
     Route::post('/defect/confirm', [WarehouseDefectController::class, 'confirm']);
     Route::get('/defect/history', [WarehouseDefectController::class, 'index']);
