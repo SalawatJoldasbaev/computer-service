@@ -32,6 +32,7 @@ class WarehouseBasketController extends Controller
                 ],
                 'price_uzs' => $basket->uzs_price,
                 'price_usd' => $basket->usd_price,
+                'date' => date_format($basket->created_at, 'Y-m-d H:i:s'),
                 'description' => $basket->description,
             ];
         }
