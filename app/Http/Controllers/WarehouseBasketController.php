@@ -42,7 +42,7 @@ class WarehouseBasketController extends Controller
     public function setWarehouse(Request $request)
     {
         $validation = Validator::make($request->all(), [
-            'basket_id' => 'required',
+            'basket_id' => 'required|exists:warehouse_baskets,id',
             'orders' => 'required|array',
             'orders.*.order_id' => 'required|integer',
             'orders.*.product_id' => 'required|integer',
