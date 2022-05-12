@@ -2,33 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\WarehouseSetBasketRequest;
 use App\Models\Warehouse;
-use Illuminate\Http\Request;
-use App\Models\Warehouse_order;
 use App\Models\Warehouse_basket;
-use App\Models\WarehouseBasketDefect;
-use App\Models\WarehouseItemDefect;
+use App\Models\Warehouse_order;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class WarehouseBasketController extends Controller
 {
     public function all_basket(Request $request)
     {
-        $baskets = Warehouse_basket::where('status', 'pending')->get();
+        $postman_id = $request->postman_id;
+
+        $baskets = Warehouse_basket::where('status', 'pending')
+            ->when($postman_id, function ($query) use ($postman_id) {
+                $query->where('postman_id', $postman_id);
+            })->get();
         $data = [];
         foreach ($baskets as $basket) {
             $data[] = [
                 'basket_id' => $basket->id,
                 'admin' => [
                     'id' => $basket->admin->id,
-                    'name' => $basket->admin->name
+                    'name' => $basket->admin->name,
                 ],
                 'postman' => [
                     'id' => $basket->postman->id,
-                    'full_name' => $basket->postman->full_name
+                    'full_name' => $basket->postman->full_name,
                 ],
                 'price_uzs' => $basket->uzs_price,
                 'price_usd' => $basket->usd_price,
@@ -72,7 +73,7 @@ class WarehouseBasketController extends Controller
         }
         $basket->update([
             'status' => 'warehouse',
-            'delivered_at' => Carbon::now()
+            'delivered_at' => Carbon::now(),
         ]);
         return BaseController::success();
     }
