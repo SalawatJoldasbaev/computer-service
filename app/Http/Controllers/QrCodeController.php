@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductCode;
 use App\Models\WarehouseBasketDefect;
-use Illuminate\Http\Request;
 use App\Models\WarehouseItemDefect;
+use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class QrCodeController extends Controller
@@ -38,11 +38,11 @@ class QrCodeController extends Controller
             'warehouse_id' => $data->warehouse_id,
             'postman' => [
                 'id' => $data->postman->id,
-                'name' => $data->postman->full_name
+                'name' => $data->postman->full_name,
             ],
             'product' => [
                 'id' => $data->product->id,
-                'name' => $data->product->name
+                'name' => $data->product->name,
             ],
             'warehouse' => isset($data->warehouse) ? [
                 'count' => $data->warehouse->count,

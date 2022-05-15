@@ -13,11 +13,14 @@ class HistoryOrderController extends Controller
         $from = $request->from ?? Carbon::today();
         $to = $request->to ?? Carbon::today();
         $postman_id = $request->postman_id;
-
-        $warehouseBasket = Warehouse_basket::whereIn('status', ['warehouse', 'confirmed'])->whereDate('delivered_at', '>=', $from)
+        $status = $request->status;
+        $warehouseBasket = Warehouse_basket::whereIn('status', ['checked', 'confirmed'])->whereDate('delivered_at', '>=', $from)
             ->whereDate('delivered_at', '<=', $to)
             ->when($postman_id, function ($query) use ($postman_id) {
                 return $query->where('postman_id', $postman_id);
+            })
+            ->when($status, function ($query) use ($status) {
+                return $query->where('status', $status);
             })
             ->get();
 
@@ -48,7 +51,7 @@ class HistoryOrderController extends Controller
         try {
             $basket = Warehouse_basket::findOrFail($basket_id);
             $orders = $basket->orders;
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             return BaseController::error('basket not found', 404);
         }
         $final = [];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProductCode;
 use App\Models\Warehouse;
 use App\Models\Warehouse_basket;
 use App\Models\Warehouse_order;
@@ -15,7 +16,7 @@ class WarehouseBasketController extends Controller
     {
         $postman_id = $request->postman_id;
 
-        $baskets = Warehouse_basket::where('status', 'pending')
+        $baskets = Warehouse_basket::where('status', 'unchecked')
             ->when($postman_id, function ($query) use ($postman_id) {
                 $query->where('postman_id', $postman_id);
             })->get();
@@ -57,7 +58,7 @@ class WarehouseBasketController extends Controller
 
         $basket_id = $request->basket_id;
         $basket = Warehouse_basket::find($basket_id);
-        if ($basket->status != 'pending') {
+        if ($basket->status != 'unchecked') {
             return BaseController::error('basket not found', 404);
         }
         $orders = collect($request->orders);
@@ -72,9 +73,54 @@ class WarehouseBasketController extends Controller
             Warehouse::SetWarehouse($order->postman_id, $order->product_id, $get_order['count'], $order->code);
         }
         $basket->update([
-            'status' => 'warehouse',
+            'status' => 'checked',
             'delivered_at' => Carbon::now(),
         ]);
         return BaseController::success();
+    }
+
+    public function delete(Warehouse_basket $basket)
+    {
+        if ($basket->status == 'unchecked') {
+            $basket->orders()->forceDelete();
+            ProductCode::where('warehouse_basket_id', $basket->id)->delete();
+            $basket->forceDelete();
+            return BaseController::success();
+        } else {
+            return BaseController::error('The basket cannot be deleted', 409);
+        }
+    }
+
+    public function confirmation(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'basket_id' => 'required|exists:warehouse_baskets,id',
+            'description' => 'nullable',
+        ]);
+
+        if ($validation->fails()) {
+            return BaseController::error($validation->errors()->first(), 422);
+        }
+
+        $basket = Warehouse_basket::find($request->basket_id);
+        $usd_price = 0;
+        $uzs_price = 0;
+        $orders = $basket->orders;
+        foreach ($orders as $order) {
+            $order->count = $order->get_count;
+            if ($order->unit == 'USD') {
+                $usd_price += $order->price * $order->get_count;
+            } elseif ($order->unit == 'UZS') {
+                $uzs_price += $order->price * $order->get_count;
+            }
+            $order->save();
+        }
+        $basket->description_checked = $request->description;
+        $basket->status = 'confirmed';
+        $basket->usd_price = $usd_price;
+        $basket->uzs_price = $uzs_price;
+        $basket->save();
+        return BaseController::success();
+
     }
 }

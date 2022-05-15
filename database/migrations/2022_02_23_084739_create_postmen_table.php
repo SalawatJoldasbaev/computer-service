@@ -20,13 +20,14 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->string('inn')->unique();
             $table->string('description')->nullable();
+            $table->double('balance')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
         Postman::create([
-            'full_name'=> 'Saliq',
-            'phone'=> '998906622939',
-            'inn'=> '123456789'
+            'full_name' => 'Saliq',
+            'phone' => '998906622939',
+            'inn' => '123456789',
         ]);
     }
 

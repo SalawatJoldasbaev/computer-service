@@ -18,7 +18,7 @@ class CategoryController extends Controller
             'min_percent' => ['integer', Rule::requiredIf($required)],
             'whole_percent' => ['integer', Rule::requiredIf($required)],
             'max_percent' => ['integer', Rule::requiredIf($required)],
-            'parent_id' => 'required|integer'
+            'parent_id' => 'required|integer',
         ]);
 
         if ($validation->fails()) {
@@ -34,7 +34,7 @@ class CategoryController extends Controller
                 'min_percent' => $request->min_percent,
                 'whole_percent' => $request->whole_percent,
                 'max_percent' => $request->max_percent,
-                'parent_id' => $request->parent_id
+                'parent_id' => $request->parent_id,
             ]);
         } else {
             $category = Category::find($request->parent_id);
@@ -46,7 +46,7 @@ class CategoryController extends Controller
                 'min_percent' => $request->min_percent ?? $category->min_percent,
                 'whole_percent' => $request->whole_percent ?? $category->whole_percent,
                 'max_percent' => $request->max_percent ?? $category->max_percent,
-                'parent_id' => $request->parent_id
+                'parent_id' => $request->parent_id,
             ]);
         }
 
@@ -83,7 +83,7 @@ class CategoryController extends Controller
             'min_percent' => $category->min_percent,
             'max_percent' => $category->max_percent,
             'whole_percent' => $category->whole_percent,
-            'children' => $category->children
+            'children' => $category->children,
         ];
         return BaseController::response($data);
     }
@@ -93,9 +93,8 @@ class CategoryController extends Controller
         $final_response = [];
         $this->parent_ids($category->parents, $final_response, $category->id);
         Category::whereIn('id', $final_response)->delete();
-        $products = Product::whereIn('category_id', $final_response);
-        $ids = $products->value('id');
-        $products->delete();
+        $products = Product::whereIn('category_id', $final_response)->get()->collect();
+        Product::destroy($products->pluck('id'));
         return BaseController::success('successful deleted');
     }
 

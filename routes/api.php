@@ -1,20 +1,20 @@
 <?php
 
 use App\Http\Controllers\AccountingOrderReviewController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AccountNumberController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HistoryOrderController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\PostmanController;
 use App\Http\Controllers\ProductController;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\WarehouseController;
-use App\Http\Controllers\HistoryOrderController;
-use App\Http\Controllers\AccountNumberController;
-use App\Http\Controllers\WarehouseOrderController;
+use App\Http\Controllers\QrCodeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseBasketController;
+use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseDefectController;
+use App\Http\Controllers\WarehouseOrderController;
+use Illuminate\Support\Facades\Route;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
@@ -65,6 +65,8 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('create', 'create');
             Route::delete('/delete/{id}', 'delete');
             Route::get('/', 'basket_orders');
+            Route::put('/', 'updateOrder');
+            Route::post('/orders', 'addOrder');
         });
     Route::get('/warehouse/baskets/accounting/', [AccountingOrderReviewController::class, 'baskets']);
     Route::prefix('/warehouse-basket')
@@ -72,6 +74,8 @@ Route::middleware('auth:sanctum')->group(function () {
         ->group(function () {
             Route::get('/all', 'all_basket');
             Route::post('/deliver', 'setWarehouse');
+            Route::delete('/{basket}', 'delete');
+            Route::post('/confirmation', 'confirmation');
         });
     Route::get('/orders/history', [HistoryOrderController::class, 'index']);
     Route::get('/orders/history/{basket_id}', [HistoryOrderController::class, 'orders']);
