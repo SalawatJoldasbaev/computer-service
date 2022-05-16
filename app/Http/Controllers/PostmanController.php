@@ -62,7 +62,7 @@ class PostmanController extends Controller
     }
 
     public function all_postman(){
-        return BaseController::response(Postman::all('id', 'full_name', 'phone', 'inn', 'description')->toArray());
+        return BaseController::response(Postman::all('id', 'full_name', 'phone', 'inn', 'balance', 'description')->toArray());
     }
 
     public function payment(Request $request, Postman $postman){
