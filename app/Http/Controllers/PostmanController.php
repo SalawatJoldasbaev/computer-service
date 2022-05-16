@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Postman;
 use Illuminate\Http\Request;
+use App\Models\PaymentHistory;
 use App\Http\Controllers\BaseController;
-use Illuminate\Contracts\Validation\Validator as ValidationValidator;
 use Illuminate\Support\Facades\Validator;
 
 class PostmanController extends Controller
@@ -62,5 +63,29 @@ class PostmanController extends Controller
 
     public function all_postman(){
         return BaseController::response(Postman::all('id', 'full_name', 'phone', 'inn', 'description')->toArray());
+    }
+
+    public function payment(Request $request, Postman $postman){
+        $validation = Validator::make($request->all(), [
+            'usd_rate'=> 'required',
+            'price'=> 'required',
+            'description' => 'nullable',
+        ]);
+
+        if($validation->fails()){
+            return BaseController::error($validation->errors()->first(), 422);
+        }
+        PaymentHistory::create([
+            'postman_id'=> $postman->id,
+            'usd_rate'=> $request->usd_rate,
+            'paid_sum'=> $request->price,
+            'balance'=> $postman->balance, 
+            'paid_time'=> Carbon::now(),
+        ]);
+        $price = ($request->price*$request->usd_rate);
+        $postman->balance -= $price;
+        $postman->save();
+        return BaseController::success();
+
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaymentHistory;
 use App\Models\ProductCode;
 use App\Models\Warehouse;
 use App\Models\Warehouse_basket;
@@ -95,6 +96,8 @@ class WarehouseBasketController extends Controller
     {
         $validation = Validator::make($request->all(), [
             'basket_id' => 'required|exists:warehouse_baskets,id',
+            'usd_rate'=> 'required',
+            'price'=> 'required',
             'description' => 'nullable',
         ]);
 
@@ -103,6 +106,7 @@ class WarehouseBasketController extends Controller
         }
 
         $basket = Warehouse_basket::find($request->basket_id);
+        $postman = $basket->postman;
         $usd_price = 0;
         $uzs_price = 0;
         $orders = $basket->orders;
@@ -115,10 +119,20 @@ class WarehouseBasketController extends Controller
             }
             $order->save();
         }
+        $price = (($usd_price-$request->price)*$request->usd_rate)+$uzs_price;
+        PaymentHistory::create([
+            'postman_id'=> $postman->id,
+            'usd_rate'=> $request->usd_rate,
+            'paid_sum'=> $request->price,
+            'balance'=> ($usd_price*$request->usd_rate)+$uzs_price, 
+            'paid_time'=> Carbon::now(),
+        ]);
         $basket->description_checked = $request->description;
         $basket->status = 'confirmed';
         $basket->usd_price = $usd_price;
         $basket->uzs_price = $uzs_price;
+        $postman->balance += $price;
+        $postman->save();
         $basket->save();
         return BaseController::success();
 

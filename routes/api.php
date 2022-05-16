@@ -27,8 +27,8 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/single/{id}', 'single');
             Route::get('/all', 'all');
         });
-    Route::get('/postman/{id}/payment/history', [AccountNumberController::class, 'index']);
-    Route::patch('/postman/{id}/payment/history/update', [AccountNumberController::class, 'update']);
+    // Route::get('/postman/{id}/payment/history', [AccountNumberController::class, 'index']);
+    // Route::patch('/postman/{id}/payment/history/update', [AccountNumberController::class, 'update']);
     Route::prefix('/postman')
         ->controller(PostmanController::class)
         ->group(function () {
@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/delete/{id}', 'delete');
             Route::put('update/{id}', 'update');
             Route::get('single/{id}', 'single');
+            Route::post('/payments/{postman}', 'payment');
         });
 
     Route::prefix('/category')
