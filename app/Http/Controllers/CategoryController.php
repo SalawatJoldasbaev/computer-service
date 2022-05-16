@@ -15,9 +15,9 @@ class CategoryController extends Controller
         $required = $request->parent_id == 0;
         $validation = Validator::make($request->all(), [
             'name' => 'required|string',
-            'min_percent' => ['integer', Rule::requiredIf($required)],
-            'whole_percent' => ['integer', Rule::requiredIf($required)],
-            'max_percent' => ['integer', Rule::requiredIf($required)],
+            'min_percent' => [Rule::requiredIf($required)],
+            'whole_percent' => [Rule::requiredIf($required)],
+            'max_percent' => [Rule::requiredIf($required)],
             'parent_id' => 'required|integer',
         ]);
 
