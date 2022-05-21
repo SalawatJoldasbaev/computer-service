@@ -130,7 +130,7 @@ class WarehouseOrderController extends Controller
     public function updateOrder(WarehouseOrderUpdate $request)
     {
         $basket = Warehouse_basket::find($request->basket_id);
-        if ($basket->status != 'confirmed') {
+        if ($basket->status == 'confirmed') {
             return BaseController::error('This basket cannot be edited', 409);
         }
         $usd_price = $basket->usd_price;
