@@ -33,10 +33,15 @@ class WarehouseBasketController extends Controller
                     'id' => $basket->postman->id,
                     'full_name' => $basket->postman->full_name,
                 ],
-                'price_uzs' => $basket->uzs_price,
-                'price_usd' => $basket->usd_price,
+                'price' => [
+                    'usd' => $basket->usd_price,
+                    'uzs' => $basket->uzs_price,
+                ],
+                'status' => $basket->status,
                 'date' => date_format($basket->created_at, 'Y-m-d H:i:s'),
                 'description' => $basket->description,
+                'ordered_at' => $basket->ordered_at,
+                'delivered_at' => $basket->delivered_at,
             ];
         }
         return BaseController::response($data);
@@ -124,7 +129,7 @@ class WarehouseBasketController extends Controller
             'postman_id'=> $postman->id,
             'usd_rate'=> $request->usd_rate,
             'paid_sum'=> $request->price,
-            'balance'=> ($usd_price*$request->usd_rate)+$uzs_price, 
+            'balance'=> ($usd_price*$request->usd_rate)+$uzs_price,
             'paid_time'=> Carbon::now(),
         ]);
         $basket->description_checked = $request->description;

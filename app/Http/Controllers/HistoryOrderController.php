@@ -28,6 +28,10 @@ class HistoryOrderController extends Controller
         foreach ($warehouseBasket as $basket) {
             $final[] = [
                 'basket_id' => $basket->id,
+                'admin' => [
+                    'id' => $basket->admin->id,
+                    'name' => $basket->admin->name,
+                ],
                 'postman' => [
                     'id' => $basket->postman_id,
                     'name' => $basket->postman->full_name,
