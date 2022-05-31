@@ -16,11 +16,13 @@ class WarehouseBasketController extends Controller
     public function all_basket(Request $request)
     {
         $postman_id = $request->postman_id;
-
+        $from = $request->from ?? Carbon::today();
+        $to = $request->to ?? Carbon::today();
         $baskets = Warehouse_basket::where('status', 'unchecked')
             ->when($postman_id, function ($query) use ($postman_id) {
                 $query->where('postman_id', $postman_id);
-            })->get();
+            })->whereDate('ordered_at', '>=', $from)
+            ->whereDate('ordered_at', '<=', $to)->get();
         $data = [];
         foreach ($baskets as $basket) {
             $data[] = [
