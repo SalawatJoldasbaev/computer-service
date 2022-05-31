@@ -34,7 +34,7 @@ class HistoryOrderController extends Controller
                 ],
                 'postman' => [
                     'id' => $basket->postman_id,
-                    'name' => $basket->postman->full_name,
+                    'full_name' => $basket->postman->full_name,
                 ],
                 'price' => [
                     'usd' => $basket->usd_price,
